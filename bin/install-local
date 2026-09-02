@@ -1,0 +1,28 @@
+#!/bin/bash
+# Build a Release copy of Leader Key from this checkout, ad-hoc sign the whole
+# bundle (embedded Sparkle included, otherwise dyld rejects the Team ID
+# mismatch), and install it over /Applications/Leader Key.app.
+#
+# The Homebrew cask must not be installed at the same time — it owns the same
+# path. `brew uninstall --cask leader-key` first.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+DD="$(mktemp -d /tmp/leaderkey-build.XXXXXX)"
+APP="/Applications/Leader Key.app"
+
+xcodebuild -scheme "Leader Key" -configuration Release -destination 'platform=macOS,arch=arm64' \
+  -derivedDataPath "$DD" -skipPackagePluginValidation -skipMacroValidation \
+  CODE_SIGN_IDENTITY="-" CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="" \
+  build -quiet
+
+osascript -e 'quit app "Leader Key"' >/dev/null 2>&1 || true
+sleep 1
+rm -rf "$APP"
+ditto "$DD/Build/Products/Release/Leader Key.app" "$APP"
+codesign --force --deep --sign - "$APP"
+codesign --verify --deep --strict "$APP"
+rm -rf "$DD"
+
+open -a "Leader Key"
+echo "Installed $(defaults read "$APP/Contents/Info.plist" CFBundleShortVersionString) ($(git rev-parse --short HEAD)) to $APP"

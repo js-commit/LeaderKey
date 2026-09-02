@@ -25,6 +25,11 @@ class Controller {
 
   private var cancellables = Set<AnyCancellable>()
 
+  // The app that was frontmost when the panel was shown. Captured before the
+  // panel is ordered in so application actions can tell whether their target
+  // is the app the user was just in (and should be hidden) or not.
+  private var frontmostAppAtShow: NSRunningApplication?
+
   init(userState: UserState, userConfig: UserConfig) {
     self.userState = userState
     self.userConfig = userConfig
@@ -56,6 +61,10 @@ class Controller {
 
   func show() {
     Events.send(.willActivate)
+
+    let frontmost = NSWorkspace.shared.frontmostApplication
+    frontmostAppAtShow =
+      frontmost?.processIdentifier == ProcessInfo.processInfo.processIdentifier ? nil : frontmost
 
     let screen = Defaults[.screen].getNSScreen() ?? NSScreen()
     window.show(on: screen) {
@@ -299,9 +308,11 @@ class Controller {
   private func runAction(_ action: Action) {
     switch action.type {
     case .application:
-      NSWorkspace.shared.openApplication(
-        at: URL(fileURLWithPath: action.value),
-        configuration: NSWorkspace.OpenConfiguration())
+      if Defaults[.toggleApplications] {
+        toggleApplication(at: URL(fileURLWithPath: action.value))
+      } else {
+        openApplication(at: URL(fileURLWithPath: action.value))
+      }
     case .url:
       openURL(action)
     case .command:
@@ -320,6 +331,54 @@ class Controller {
 
   private func clear() {
     userState.clear()
+  }
+
+  private func openApplication(at url: URL) {
+    NSWorkspace.shared.openApplication(
+      at: url,
+      configuration: NSWorkspace.OpenConfiguration())
+  }
+
+  // Alfred-style toggle: if the target app is the one the user was just in,
+  // hide it (windows vanish, macOS refocuses the previous app). Otherwise
+  // launch or bring it forward as usual.
+  private func toggleApplication(at url: URL) {
+    guard let bundleId = Bundle(url: url)?.bundleIdentifier,
+      let app = NSWorkspace.shared.runningApplications.first(where: {
+        $0.bundleIdentifier == bundleId
+      })
+    else {
+      openApplication(at: url)
+      return
+    }
+
+    let isFrontmost =
+      app.isActive || app.processIdentifier == frontmostAppAtShow?.processIdentifier
+
+    if isFrontmost && !app.isHidden {
+      app.hide()
+      return
+    }
+
+    // Finder is always running, so "launch" never opens a window for it.
+    // Match Alfred: if it has no windows, open one (this also activates Finder).
+    if bundleId == "com.apple.finder" && !hasVisibleWindows(pid: app.processIdentifier) {
+      NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: NSHomeDirectory())
+      return
+    }
+
+    openApplication(at: url)
+  }
+
+  private func hasVisibleWindows(pid: pid_t) -> Bool {
+    guard
+      let windows = CGWindowListCopyWindowInfo(
+        [.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]]
+    else { return false }
+    return windows.contains { info in
+      (info[kCGWindowOwnerPID as String] as? pid_t) == pid
+        && (info[kCGWindowLayer as String] as? Int) == 0
+    }
   }
 
   private func openURL(_ action: Action) {

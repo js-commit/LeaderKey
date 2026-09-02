@@ -148,6 +148,16 @@ struct AdvancedPane: View {
         Defaults.Toggle("Show Leader Key in menubar", key: .showMenuBarIcon)
         VStack(alignment: .leading, spacing: 4) {
           Defaults.Toggle(
+            "Toggle applications", key: .toggleApplications)
+          Text(
+            "When enabled, triggering an application that is already in front hides it and returns focus to the previous app."
+          )
+          .font(.caption)
+          .foregroundColor(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+        }
+        VStack(alignment: .leading, spacing: 4) {
+          Defaults.Toggle(
             "Force English keyboard layout", key: .forceEnglishKeyboardLayout)
           Text(
             "When enabled, letter keys are interpreted in US-English (QWERTY) regardless of your current keyboard layout."

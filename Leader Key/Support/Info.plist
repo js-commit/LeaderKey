@@ -21,11 +21,5 @@
 			</array>
 		</dict>
 	</array>
-	<key>SUEnableAutomaticChecks</key>
-	<false/>
-	<key>SUFeedURL</key>
-	<string>https://mikker.github.io/LeaderKey.app/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>4ZfPYKvzE7b/uYW4B8f2v++7Bry/OmvYHCzl3g936KE=</string>
 </dict>
 </plist>

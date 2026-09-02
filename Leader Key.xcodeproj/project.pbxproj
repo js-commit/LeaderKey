@@ -42,7 +42,6 @@
 		42B21FBC2D67566100F4A2C7 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B21FBB2D67566100F4A2C7 /* Alerts.swift */; };
 		42CCB5A32DAD257700356FC0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FBCA04D82D9F02F700271163 /* Kingfisher */; };
 		42DFCD722D5B7D48002EA111 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DFCD712D5B7D46002EA111 /* Events.swift */; };
-		42E70A572C823FF200FCF902 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 42E70A562C823FF200FCF902 /* Sparkle */; };
 		42F4CDC92D458FF700D0DD76 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F4CDC82D458FF700D0DD76 /* MainMenu.swift */; };
 		42F4CDCD2D45B13600D0DD76 /* KeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F4CDCC2D45B13600D0DD76 /* KeyButton.swift */; };
 		42F4CDCF2D46E2B300D0DD76 /* Cheatsheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F4CDCE2D46E2B300D0DD76 /* Cheatsheet.swift */; };
@@ -118,7 +117,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				42CCB5A32DAD257700356FC0 /* Kingfisher in Frameworks */,
-				42E70A572C823FF200FCF902 /* Sparkle in Frameworks */,
 				427C18232BD31DF100955B98 /* Settings in Frameworks */,
 				115AA5C22DA546D500C17E18 /* SymbolPicker in Frameworks */,
 				427C181A2BD3123C00955B98 /* Defaults in Frameworks */,
@@ -282,7 +280,6 @@
 				427C18192BD3123C00955B98 /* Defaults */,
 				427C18222BD31DF100955B98 /* Settings */,
 				4279AFEC2C6A175500952A83 /* LaunchAtLogin */,
-				42E70A562C823FF200FCF902 /* Sparkle */,
 				115AA5C12DA546D500C17E18 /* SymbolPicker */,
 				FBCA04D82D9F02F700271163 /* Kingfisher */,
 			);
@@ -340,7 +337,6 @@
 				427C18152BD311EC00955B98 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				427C18182BD3123C00955B98 /* XCRemoteSwiftPackageReference "Defaults" */,
 				427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Settings" */,
-				4279AFE92C6A070300952A83 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4279AFEB2C6A175500952A83 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 				4236321C2D6799B900878D92 /* XCRemoteSwiftPackageReference "SwiftFormatPlugins" */,
 				115AA5C02DA5463700C17E18 /* XCRemoteSwiftPackageReference "SymbolPicker" */,
@@ -745,14 +741,6 @@
 				minimumVersion = 1.1.1;
 			};
 		};
-		4279AFE92C6A070300952A83 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.6.4;
-			};
-		};
 		4279AFEB2C6A175500952A83 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
@@ -825,11 +813,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 427C18212BD31DF100955B98 /* XCRemoteSwiftPackageReference "Settings" */;
 			productName = Settings;
-		};
-		42E70A562C823FF200FCF902 /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4279AFE92C6A070300952A83 /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
 		};
 		FBCA04D82D9F02F700271163 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,9 +1,16 @@
 import Cocoa
+import Defaults
 
 extension NSWindow {
   func fadeIn(
     duration: TimeInterval = 0.05, callback: (() -> Void)? = nil
   ) {
+    if Defaults[.disableAnimations] {
+      alphaValue = 1
+      callback?()
+      return
+    }
+
     alphaValue = 0
 
     NSAnimationContext.runAnimationGroup { context in
@@ -17,6 +24,12 @@ extension NSWindow {
   func fadeOut(
     duration: TimeInterval = 0.05, callback: (() -> Void)? = nil
   ) {
+    if Defaults[.disableAnimations] {
+      alphaValue = 0
+      callback?()
+      return
+    }
+
     alphaValue = 1
 
     NSAnimationContext.runAnimationGroup { context in
@@ -31,6 +44,12 @@ extension NSWindow {
     distance: CGFloat = 50, duration: TimeInterval = 0.125,
     callback: (() -> Void)? = nil
   ) {
+    if Defaults[.disableAnimations] {
+      alphaValue = 1
+      callback?()
+      return
+    }
+
     let toFrame = frame
     let fromFrame = NSRect(
       x: toFrame.minX, y: toFrame.minY - distance, width: toFrame.width,
@@ -52,6 +71,12 @@ extension NSWindow {
     distance: CGFloat = 50, duration: TimeInterval = 0.125,
     callback: (() -> Void)? = nil
   ) {
+    if Defaults[.disableAnimations] {
+      alphaValue = 0
+      callback?()
+      return
+    }
+
     let fromFrame = frame
     let toFrame = NSRect(
       x: fromFrame.minX, y: fromFrame.minY - distance, width: fromFrame.width,

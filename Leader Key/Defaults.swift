@@ -41,6 +41,8 @@ extension Defaults.Keys {
     default: Set(), suite: defaultsSuite)
   static let toggleApplications = Key<Bool>(
     "toggleApplications", default: true, suite: defaultsSuite)
+  static let disableAnimations = Key<Bool>(
+    "disableAnimations", default: true, suite: defaultsSuite)
 }
 
 enum AutoOpenCheatsheetSetting: String, Defaults.Serializable {

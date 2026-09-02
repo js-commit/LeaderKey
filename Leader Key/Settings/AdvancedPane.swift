@@ -147,6 +147,15 @@ struct AdvancedPane: View {
       Settings.Section(title: "Other") {
         Defaults.Toggle("Show Leader Key in menubar", key: .showMenuBarIcon)
         VStack(alignment: .leading, spacing: 4) {
+          Defaults.Toggle("Disable animations", key: .disableAnimations)
+          Text(
+            "Show and hide the window instantly. Actions run as soon as the key is pressed instead of after the fade-out."
+          )
+          .font(.caption)
+          .foregroundColor(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+        }
+        VStack(alignment: .leading, spacing: 4) {
           Defaults.Toggle(
             "Toggle applications", key: .toggleApplications)
           Text(

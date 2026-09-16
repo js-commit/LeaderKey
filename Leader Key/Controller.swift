@@ -308,10 +308,16 @@ class Controller {
   private func runAction(_ action: Action) {
     switch action.type {
     case .application:
+      let url = URL(fileURLWithPath: action.value)
+      if Defaults[.confirmLaunch] && runningApplication(at: url) == nil
+        && !confirmLaunch(of: action, at: url)
+      {
+        break
+      }
       if Defaults[.toggleApplications] {
-        toggleApplication(at: URL(fileURLWithPath: action.value))
+        toggleApplication(at: url)
       } else {
-        openApplication(at: URL(fileURLWithPath: action.value))
+        openApplication(at: url)
       }
     case .url:
       openURL(action)
@@ -339,14 +345,37 @@ class Controller {
       configuration: NSWorkspace.OpenConfiguration())
   }
 
+  private func runningApplication(at url: URL) -> NSRunningApplication? {
+    guard let bundleId = Bundle(url: url)?.bundleIdentifier else { return nil }
+    return NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == bundleId }
+  }
+
+  // Guard against accidental launches: apps that aren't running need a
+  // confirmation. Return = open, Escape = cancel. The overlay has already
+  // closed at this point, so on cancel hand focus back to the previous app.
+  private func confirmLaunch(of action: Action, at url: URL) -> Bool {
+    let alert = NSAlert()
+    alert.messageText = "Open \(action.displayName)?"
+    alert.informativeText = "\(action.displayName) is not running."
+    alert.alertStyle = .informational
+    alert.icon = NSWorkspace.shared.icon(forFile: url.path)
+    alert.addButton(withTitle: "Open")
+    alert.addButton(withTitle: "Cancel")
+
+    NSApp.activate(ignoringOtherApps: true)
+    let confirmed = alert.runModal() == .alertFirstButtonReturn
+    if !confirmed {
+      frontmostAppAtShow?.activate()
+    }
+    return confirmed
+  }
+
   // Alfred-style toggle: if the target app is the one the user was just in,
   // hide it (windows vanish, macOS refocuses the previous app). Otherwise
   // launch or bring it forward as usual.
   private func toggleApplication(at url: URL) {
     guard let bundleId = Bundle(url: url)?.bundleIdentifier,
-      let app = NSWorkspace.shared.runningApplications.first(where: {
-        $0.bundleIdentifier == bundleId
-      })
+      let app = runningApplication(at: url)
     else {
       openApplication(at: url)
       return

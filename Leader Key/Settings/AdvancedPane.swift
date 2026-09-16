@@ -156,6 +156,15 @@ struct AdvancedPane: View {
           .fixedSize(horizontal: false, vertical: true)
         }
         VStack(alignment: .leading, spacing: 4) {
+          Defaults.Toggle("Confirm before launching", key: .confirmLaunch)
+          Text(
+            "Ask before opening an application that is not already running. Return opens, Escape cancels."
+          )
+          .font(.caption)
+          .foregroundColor(.secondary)
+          .fixedSize(horizontal: false, vertical: true)
+        }
+        VStack(alignment: .leading, spacing: 4) {
           Defaults.Toggle(
             "Toggle applications", key: .toggleApplications)
           Text(
